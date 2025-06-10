@@ -1,0 +1,40 @@
+{
+  "type": "module",
+  "name": "kambaz-node-server-app-su1-25",
+  "version": "1.0.0",
+  "description": "Node.js HTTP Web server for the Kambaz application",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/clarisseli/kambaz-node-server-app.git"
+  },
+  "keywords": [
+    "Node",
+    "REST",
+    "Server",
+    "HTTP",
+    "Web",
+    "Development",
+    "CS5610"
+  ],
+  "author": "Clarisse Li",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/clarisseli/kambaz-node-server-app/issues"
+  },
+  "homepage": "https://github.com/clarisseli/kambaz-node-server-app#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "express-session": "^1.18.1",
+    "uuid": "^11.1.0"
+  },
+  "devDependencies": {
+    "@types/express-session": "^1.18.2"
+  }
+}
