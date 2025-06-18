@@ -1,6 +1,5 @@
 import db from "../Database/index.js";
 import { v4 as uuidv4 } from "uuid";
-let { users } = db;
 import model from "./model.js";
 
 export const createUser = (user) => {

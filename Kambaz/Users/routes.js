@@ -22,17 +22,24 @@ export default function UserRoutes(app) {
         const courses = courseDao.findAllCourses();
         res.json(courses);
     };
-    const findCoursesForEnrolledUser = async (req, res) => {
-        let { userId } = req.params;
-        if (userId === "current") {
-            const currentUser = req.session["currentUser"];
-            if (!currentUser) {
-                res.sendStatus(401);
-                return;
-            }
-            userId = currentUser._id;
+    const findCoursesForUser = async (req, res) => {
+        const currentUser = req.session["currentUser"];
+        if (!currentUser) {
+            res.sendStatus(401);
+            return;
         }
-        const courses = await courseDao.findCoursesForEnrolledUser(userId);
+        if (currentUser.role === "ADMIN") {
+            const courses = await courseDao.findAllCourses();
+            res.json(courses);
+            return;
+        }
+        let { uid } = req.params;
+        if (!uid) {
+            uid = currentUser._id;
+        } else if (uid === "current") {
+            uid = currentUser._id;
+        }
+        const courses = await enrollmentsDao.findCoursesForUser(uid);
         res.json(courses);
     };
     const createUser = async (req, res) => {
@@ -62,11 +69,12 @@ export default function UserRoutes(app) {
         const { userId } = req.params;
         const userUpdates = req.body;
         await dao.updateUser(userId, userUpdates);
+        const updatedUser = await dao.findUserById(userId);
         const currentUser = req.session["currentUser"];
         if (currentUser && currentUser._id === userId) {
-            req.session["currentUser"] = { ...currentUser, ...userUpdates };
+            req.session["currentUser"] = updatedUser;
         }
-        res.send(currentUser);
+        res.send(updatedUser);
     };
     const deleteUser = async (req, res) => {
         const status = await dao.deleteUser(req.params.userId);
@@ -107,7 +115,8 @@ export default function UserRoutes(app) {
 
     app.post("/api/users/current/courses", createCourse);
     app.get("/api/users/coursesAll", allCourses);
-    app.get("/api/users/:userId/courses", findCoursesForEnrolledUser);
+    app.get("/api/users/current/courses", findCoursesForUser);
+    app.get("/api/users/:uid/courses", findCoursesForUser);
     app.post("/api/users", createUser);
     app.get("/api/users", findAllUsers);
     app.get("/api/users/:userId", findUserById);

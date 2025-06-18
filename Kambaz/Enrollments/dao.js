@@ -1,42 +1,29 @@
-import Database from "../Database/index.js";
-import { v4 as uuidv4 } from "uuid";
+import model from "./model.js";
 
-export function enrollUserInCourse(userId, courseId) {
-    try {
-        const { enrollments } = Database;
-        const existingEnrollment = enrollments.find(
-            (enrollment) => enrollment.course === courseId && enrollment.user === userId
-        );
-        if (existingEnrollment) {
-            return 400;
-        }
-        const newEnrollment = { _id: uuidv4(), user: userId, course: courseId };
-        enrollments.push(newEnrollment);
-        return 201;
-    } catch (error) {
-        console.error(`DAO Error in enrollUserInCourse:`, error);
-        throw error;
-    }
-}
-
-export function unenrollUserInCourse(userId, courseId) {
-    try {
-        const { enrollments } = Database;
-        const initialLength = enrollments.length;
-        Database.enrollments = enrollments.filter(
-            (enrollment) => !(enrollment.course === courseId && enrollment.user === userId)
-        );
-        if (Database.enrollments.length === initialLength) {
-            return 404;
-        }
-        return 200;
-    } catch (error) {
-        console.error(`DAO Error in unenrollUserInCourse:`, error);
-        throw error;
-    }
-}
-
-export function getEnrollments() {
-    const { enrollments } = Database;
+export async function getEnrollments() {
+    const enrollments = await model.find();
     return enrollments;
+}
+export async function findCoursesForUser(userId) {
+    const enrollments = await model.find({ user: userId }).populate("course");
+    const validCourses = enrollments
+        .filter(enrollment => enrollment.course !== null)
+        .map(enrollment => enrollment.course);
+    return validCourses;
+}
+export async function findUsersForCourse(courseId) {
+    const enrollments = await model.find({ course: courseId }).populate("user");
+    return enrollments.map((enrollment) => enrollment.user);
+}
+export async function enrollUserInCourse(user, course) {
+    const existingEnrollment = await model.findOne({ user, course });
+    if (existingEnrollment) {
+        return existingEnrollment;
+    }
+    const newEnrollment = { user, course, _id: `${user}-${course}` };
+    const result = await model.create(newEnrollment);
+    return result;
+}
+export function unenrollUserFromCourse(user, course) {
+    return model.deleteOne({ user, course });
 }
