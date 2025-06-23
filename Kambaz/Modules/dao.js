@@ -23,5 +23,3 @@ export function updateModule(moduleId, moduleUpdates) {
     Object.assign(module, moduleUpdates);
     return module;
 }
-
-

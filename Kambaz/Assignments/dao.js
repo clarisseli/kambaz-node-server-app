@@ -1,15 +1,15 @@
-import model from "./model.js"
+import model from "./model.js";
 
 export function findAllAssignments() {
     return model.find();
 }
 
 export function findAssignment(cid, aid) {
-    return model.find({ course: cid, _id: aid })
+    return model.find({ course: cid, _id: aid });
 }
 
 export function findAssignmentsForCourse(courseId) {
-    return model.find({ course: courseId })
+    return model.find({ course: courseId });
 }
 
 export function createAssignment(assignment) {
@@ -17,7 +17,7 @@ export function createAssignment(assignment) {
 }
 
 export function deleteAssignment(cid, aid) {
-    return model.deleteOne({ course: cid, _id: aid })
+    return model.deleteOne({ course: cid, _id: aid });
 }
 
 export function updateAssignment(assignmentUpdates) {

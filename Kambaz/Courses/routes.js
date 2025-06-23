@@ -7,22 +7,26 @@ export default function CourseRoutes(app) {
         const courses = await dao.findAllCourses();
         res.send(courses);
     });
+
     app.get("/api/courses/:cid", async (req, res) => {
         const { cid } = req.params;
         const status = await dao.getCourse(cid);
         res.send(status);
     });
+
     app.delete("/api/courses/:courseId", async (req, res) => {
         const { courseId } = req.params;
         const status = await dao.deleteCourse(courseId);
         res.send(status);
     });
+
     app.put("/api/courses/:courseId", async (req, res) => {
         const { courseId } = req.params;
         const courseUpdates = req.body;
         const status = await dao.updateCourse(courseId, courseUpdates);
         res.send(status);
     });
+
     app.post("/api/courses", async (req, res) => {
         const course = await dao.createCourse(req.body);
         const currentUser = req.session["currentUser"];
@@ -31,11 +35,13 @@ export default function CourseRoutes(app) {
         }
         res.json(course);
     });
+
     app.get("/api/courses/:courseId/modules", async (req, res) => {
         const { courseId } = req.params;
         const modules = await modulesDao.findModulesForCourse(courseId);
         res.send(modules);
     });
+
     app.post("/api/courses/:courseId/modules", async (req, res) => {
         const { courseId } = req.params;
         const module = {

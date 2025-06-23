@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+
 const assignmentSchema = new mongoose.Schema({
     _id: String,
     title: String,
@@ -8,7 +9,6 @@ const assignmentSchema = new mongoose.Schema({
     until_dt: Date,
     description: String,
     points: Number
-},
-    { collection: "assignments" }
-);
+}, { collection: "assignments" });
+
 export default assignmentSchema;

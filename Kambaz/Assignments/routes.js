@@ -6,7 +6,6 @@ export default function AssignmentsRoutes(app) {
             const assignments = await dao.findAllAssignments();
             res.json(assignments);
         } catch (error) {
-            console.error("Error in GET /api/assignments:", error);
             res.status(500).json({ error: error.message });
         }
     });
@@ -17,7 +16,6 @@ export default function AssignmentsRoutes(app) {
             const assignment = await dao.findAssignment(cid, aid);
             res.send(assignment);
         } catch (error) {
-            console.error("Error getting assignment:", error);
             res.status(500).json({ error: error.message });
         }
     });
@@ -28,7 +26,6 @@ export default function AssignmentsRoutes(app) {
             const assignments = await dao.findAssignmentsForCourse(cid);
             res.json(assignments);
         } catch (error) {
-            console.error("Error getting assignments for course:", error);
             res.status(500).json({ error: error.message });
         }
     });
@@ -44,7 +41,6 @@ export default function AssignmentsRoutes(app) {
             const newAssignment = await dao.createAssignment(assignment);
             res.status(201).json(newAssignment);
         } catch (error) {
-            console.error("Error creating assignment:", error);
             res.status(500).json({ error: error.message });
         }
     });
@@ -55,7 +51,6 @@ export default function AssignmentsRoutes(app) {
             const status = await dao.deleteAssignment(cid, aid);
             res.json(status);
         } catch (error) {
-            console.error("Error deleting assignment:", error);
             res.status(500).json({ error: error.message });
         }
     });
@@ -71,7 +66,6 @@ export default function AssignmentsRoutes(app) {
                 res.status(404).json({ message: "Assignment not found" });
             }
         } catch (error) {
-            console.error("Error updating assignment:", error);
             res.status(500).json({ error: error.message });
         }
     });
