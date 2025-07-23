@@ -1,6 +1,7 @@
 import * as dao from "./dao.js";
 import * as modulesDao from "../Modules/dao.js";
 import * as enrollmentsDao from "../Enrollments/dao.js";
+import upload from "./uploadMiddleware.js";
 
 export default function CourseRoutes(app) {
     app.get("/api/courses", async (req, res) => {
@@ -34,6 +35,30 @@ export default function CourseRoutes(app) {
             await enrollmentsDao.enrollUserInCourse(currentUser._id, course._id);
         }
         res.json(course);
+    });
+
+    // Image upload endpoint
+    app.post("/api/courses/:courseId/image", upload.single('courseImage'), async (req, res) => {
+        try {
+            const { courseId } = req.params;
+
+            if (!req.file) {
+                return res.status(400).json({ error: "No file uploaded" });
+            }
+
+            // Update course with new image path
+            const imagePath = `/images/coursePics/${req.file.filename}`;
+            await dao.updateCourse(courseId, { image: imagePath });
+
+            res.json({
+                success: true,
+                imagePath: imagePath,
+                message: "Image uploaded successfully"
+            });
+        } catch (error) {
+            console.error("Error uploading image:", error);
+            res.status(500).json({ error: error.message });
+        }
     });
 
     app.get("/api/courses/:courseId/modules", async (req, res) => {

@@ -20,6 +20,10 @@ import QuizzesRoutes from "./Kambaz/Quizzes/routes.js";
 const CONNECTION_STRING = process.env.MONGO_CONNECTION_STRING || "mongodb://127.0.0.1:27017/kambaz"
 mongoose.connect(CONNECTION_STRING);
 const app = express();
+
+// This makes everything in server/public accessible
+app.use(express.static('public'));
+
 app.use(
     cors({
         credentials: true,
